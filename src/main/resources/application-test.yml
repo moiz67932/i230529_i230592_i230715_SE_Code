@@ -3,6 +3,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/test
     username: test
     password: test
+    hikari:
+      connection-timeout: 60000
   jpa:
     hibernate:
       ddl-auto: validate

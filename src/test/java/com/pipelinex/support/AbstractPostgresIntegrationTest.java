@@ -1,19 +1,26 @@
 package com.pipelinex.support;
 
+import java.time.Duration;
+
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers(disabledWithoutDocker = true)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class AbstractPostgresIntegrationTest {
 
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
             .withDatabaseName("pipelinex")
             .withUsername("postgres")
-            .withPassword("postgres");
+            .withPassword("postgres")
+            .waitingFor(Wait.forListeningPort().withStartupTimeout(Duration.ofMinutes(3)))
+            .withStartupAttempts(3);
 
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {
