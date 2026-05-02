@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/main :: head(${title})}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content-shell">
+        <section class="surface-panel">
+            <div th:replace="~{fragments/topbar :: topbar(${pageTitle}, ${pageSubtitle})}"></div>
+            <div class="detail-card" style="max-width: 760px;">
+                <form th:action="@{/users}" th:object="${userForm}" method="post" class="d-grid gap-3">
+                    <div>
+                        <label class="form-label" for="fullName">Full name</label>
+                        <input class="form-control" id="fullName" th:field="*{fullName}">
+                        <div class="text-danger small mt-1" th:errors="*{fullName}"></div>
+                    </div>
+                    <div>
+                        <label class="form-label" for="email">Email</label>
+                        <input class="form-control" id="email" th:field="*{email}">
+                        <div class="text-danger small mt-1" th:errors="*{email}"></div>
+                    </div>
+                    <div>
+                        <label class="form-label" for="temporaryPassword">Temporary password</label>
+                        <input class="form-control" id="temporaryPassword" type="password" th:field="*{temporaryPassword}">
+                        <div class="form-text">The rep will be forced to change this on first login.</div>
+                        <div class="text-danger small mt-1" th:errors="*{temporaryPassword}"></div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary" type="submit">Create rep</button>
+                        <a class="btn btn-outline-secondary" th:href="@{/users}">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

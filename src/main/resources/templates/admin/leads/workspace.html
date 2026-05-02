@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="workspace(leadDetail, basePath)">
+    <div class="detail-grid">
+        <section class="detail-card span-4">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title" th:text="${leadDetail.lead.leadName}"></h2>
+                    <p class="section-caption" th:text="${leadDetail.lead.companyName}"></p>
+                </div>
+                <span class="badge-soft" th:classappend="${' stage-' + #strings.toLowerCase(leadDetail.lead.currentStage.name())}" th:text="${leadDetail.lead.currentStage}"></span>
+            </div>
+            <div class="meta-list">
+                <div class="meta-row"><span class="meta-label">Email</span><span class="meta-value" th:text="${leadDetail.lead.email ?: '—'}"></span></div>
+                <div class="meta-row"><span class="meta-label">Phone</span><span class="meta-value" th:text="${leadDetail.lead.phone ?: '—'}"></span></div>
+                <div class="meta-row"><span class="meta-label">Source</span><span class="meta-value" th:text="${leadDetail.lead.leadSource}"></span></div>
+                <div class="meta-row"><span class="meta-label">Assigned rep</span><span class="meta-value" th:text="${leadDetail.assignedRepName ?: 'Unassigned'}"></span></div>
+                <div class="meta-row"><span class="meta-label">Created by</span><span class="meta-value" th:text="${leadDetail.createdByName}"></span></div>
+                <div class="meta-row"><span class="meta-label">Updated by</span><span class="meta-value" th:text="${leadDetail.updatedByName}"></span></div>
+            </div>
+            <div class="d-flex gap-2 mt-3">
+                <a class="btn btn-surface" th:if="${leadDetail.admin}" th:href="@{'/leads/' + ${leadDetail.lead.id} + '/edit'}">Edit lead</a>
+                <form th:if="${leadDetail.admin && !leadDetail.lead.archived}" th:action="@{'/leads/' + ${leadDetail.lead.id} + '/archive'}" method="post">
+                    <button class="btn btn-warning-soft" type="submit">Archive</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="detail-card span-4">
+            <h2 class="section-title mb-3">Stage control</h2>
+            <form th:action="${basePath + '/stage'}" th:object="${leadDetail.stageUpdateForm}" method="post" class="d-grid gap-3">
+                <select class="form-select" th:field="*{newStage}">
+                    <option th:each="stage : ${leadDetail.stageOptions}" th:value="${stage}" th:text="${stage}"></option>
+                </select>
+                <button class="btn btn-primary" type="submit">Update stage</button>
+            </form>
+            <div class="timeline mt-4">
+                <div class="timeline-item" th:each="item : ${leadDetail.stageHistory}">
+                    <div class="timeline-item__title" th:text="${item.previousStage + ' → ' + item.newStage}"></div>
+                    <div class="timeline-item__meta" th:text="${leadDetail.userNames.get(item.changedBy) + ' · ' + dates.dateTime(item.changedAt)}"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-card span-4" th:if="${leadDetail.admin}">
+            <h2 class="section-title mb-3">Assignment</h2>
+            <form th:action="@{'/leads/' + ${leadDetail.lead.id} + '/assign'}" th:object="${leadDetail.assignmentForm}" method="post" class="d-grid gap-3">
+                <select class="form-select" th:field="*{targetRepId}">
+                    <option th:each="rep : ${leadDetail.repOptions}" th:value="${rep.id()}" th:text="${rep.fullName()}"></option>
+                </select>
+                <textarea class="form-control" th:field="*{note}" rows="3" placeholder="Optional reassignment note"></textarea>
+                <button class="btn btn-primary" type="submit">Save assignment</button>
+            </form>
+            <div class="timeline mt-4">
+                <div class="timeline-item" th:each="item : ${leadDetail.assignmentHistory}">
+                    <div class="timeline-item__title"
+                         th:text="${(leadDetail.userNames.get(item.previousRepId) ?: 'Unassigned') + ' → ' + (leadDetail.userNames.get(item.newRepId) ?: 'Unassigned')}"></div>
+                    <div class="timeline-item__meta" th:text="${leadDetail.userNames.get(item.changedBy) + ' · ' + dates.dateTime(item.changedAt)}"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-card span-6">
+            <h2 class="section-title mb-3">Activity log</h2>
+            <form th:action="${basePath + '/activities'}" th:object="${leadDetail.activityForm}" method="post" class="row g-3">
+                <div class="col-md-4">
+                    <select class="form-select" th:field="*{activityType}">
+                        <option value="">Type</option>
+                        <option th:each="type : ${T(com.pipelinex.shared.domain.ActivityType).values()}" th:value="${type}" th:text="${type}"></option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input class="form-control" type="date" th:field="*{activityDate}">
+                </div>
+                <div class="col-md-12">
+                    <textarea class="form-control" th:field="*{notes}" rows="3" placeholder="Notes"></textarea>
+                </div>
+                <div class="col-md-12">
+                    <button class="btn btn-primary" type="submit">Log activity</button>
+                </div>
+            </form>
+            <div class="timeline mt-4">
+                <div class="timeline-item" th:each="item : ${leadDetail.activities}">
+                    <div class="timeline-item__title" th:text="${item.activityType + ' · ' + dates.date(item.activityDate)}"></div>
+                    <div class="timeline-item__meta" th:text="${leadDetail.userNames.get(item.loggedBy) + ' · ' + (item.notes ?: 'No notes')}"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-card span-6">
+            <h2 class="section-title mb-3">Follow-ups</h2>
+            <form th:action="${basePath + '/follow-ups'}" th:object="${leadDetail.followUpForm}" method="post" class="row g-3">
+                <div class="col-md-6">
+                    <input class="form-control" type="date" th:field="*{dueDate}">
+                </div>
+                <div class="col-md-12">
+                    <button class="btn btn-primary" type="submit">Schedule follow-up</button>
+                </div>
+            </form>
+            <div class="timeline mt-4">
+                <div class="timeline-item" th:each="item : ${leadDetail.followUps}">
+                    <div class="timeline-item__title" th:text="${item.status + ' · ' + dates.date(item.dueDate)}"></div>
+                    <div class="timeline-item__meta" th:text="${(leadDetail.userNames.get(item.assignedRepId) ?: 'Unassigned') + ' · ' + (item.completionNote ?: 'No note')}"></div>
+                    <div class="d-flex gap-2 mt-2" th:if="${item.status.name() == 'PENDING'}">
+                        <form th:action="${leadDetail.admin} ? @{'/follow-ups/' + ${item.id} + '/complete'} : @{'/my-follow-ups/' + ${item.id} + '/complete'}" method="post">
+                            <input type="hidden" name="leadId" th:value="${leadDetail.lead.id}">
+                            <button class="btn btn-surface btn-sm" type="submit">Complete</button>
+                        </form>
+                        <form th:if="${leadDetail.admin}" th:action="@{'/follow-ups/' + ${item.id} + '/reschedule'}" method="post" class="d-flex gap-2">
+                            <input type="hidden" name="leadId" th:value="${leadDetail.lead.id}">
+                            <input class="form-control form-control-sm" type="date" name="dueDate" th:value="${item.dueDate}">
+                            <button class="btn btn-surface btn-sm" type="submit">Reschedule</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>

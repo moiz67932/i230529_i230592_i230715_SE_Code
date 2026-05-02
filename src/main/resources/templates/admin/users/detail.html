@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/main :: head(${title})}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content-shell">
+        <section class="surface-panel">
+            <div th:replace="~{fragments/topbar :: topbar(${pageTitle}, ${pageSubtitle})}"></div>
+            <div th:replace="~{fragments/flash :: flash}"></div>
+            <div class="detail-grid">
+                <section class="detail-card span-7">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title" th:text="${userDetail.fullName}">Rep Name</h2>
+                            <p class="section-caption" th:text="${userDetail.email}"></p>
+                        </div>
+                        <span class="badge-soft" th:classappend="${userDetail.status.name() == 'ACTIVE'} ? ' status-active' : ' status-inactive'" th:text="${userDetail.status}"></span>
+                    </div>
+                    <div class="meta-list">
+                        <div class="meta-row"><span class="meta-label">Role</span><span class="meta-value" th:text="${userDetail.role}"></span></div>
+                        <div class="meta-row"><span class="meta-label">Created</span><span class="meta-value" th:text="${dates.dateTime(userDetail.createdAt)}"></span></div>
+                        <div class="meta-row"><span class="meta-label">Updated</span><span class="meta-value" th:text="${dates.dateTime(userDetail.updatedAt)}"></span></div>
+                        <div class="meta-row"><span class="meta-label">Last login</span><span class="meta-value" th:text="${userDetail.lastLoginAt != null ? dates.dateTime(userDetail.lastLoginAt) : 'Never'}"></span></div>
+                    </div>
+                </section>
+                <section class="detail-card span-5">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Workload summary</h2>
+                            <p class="section-caption">A quick operational read of this rep.</p>
+                        </div>
+                    </div>
+                    <div class="meta-list">
+                        <div class="meta-row"><span class="meta-label">Assigned leads</span><span class="meta-value" th:text="${userDetail.assignedLeads}"></span></div>
+                        <div class="meta-row"><span class="meta-label">Overdue follow-ups</span><span class="meta-value" th:text="${userDetail.overdueFollowUps}"></span></div>
+                        <div class="meta-row"><span class="meta-label">Recent activities</span><span class="meta-value" th:text="${userDetail.recentActivities}"></span></div>
+                        <div class="meta-row"><span class="meta-label">Password reset pending</span><span class="meta-value" th:text="${userDetail.mustChangePassword ? 'Yes' : 'No'}"></span></div>
+                    </div>
+                </section>
+                <section class="detail-card span-6">
+                    <h2 class="section-title mb-3">Access status</h2>
+                    <form th:action="@{'/users/' + ${userDetail.id} + '/status'}" method="post" class="d-flex gap-2">
+                        <input type="hidden" name="status" th:value="${userDetail.status.name() == 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'}">
+                        <button class="btn" th:classappend="${userDetail.status.name() == 'ACTIVE'} ? 'btn-warning-soft' : 'btn-primary'" type="submit"
+                                th:text="${userDetail.status.name() == 'ACTIVE' ? 'Deactivate rep' : 'Activate rep'}"></button>
+                    </form>
+                </section>
+                <section class="detail-card span-6">
+                    <h2 class="section-title mb-3">Reset temporary password</h2>
+                    <form th:action="@{'/users/' + ${userDetail.id} + '/reset-password'}" method="post" class="d-grid gap-3">
+                        <div>
+                            <label class="form-label" for="temporaryPassword">New temporary password</label>
+                            <input class="form-control" id="temporaryPassword" name="temporaryPassword" type="password" required minlength="8">
+                        </div>
+                        <button class="btn btn-primary" type="submit">Reset password</button>
+                    </form>
+                </section>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

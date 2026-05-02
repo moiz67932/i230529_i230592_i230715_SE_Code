@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/main :: head(${title})}"></head>
+<body>
+<div class="login-shell">
+    <div class="card-soft p-5" style="max-width: 640px;">
+        <p class="eyebrow mb-2">PipelineX</p>
+        <h1 class="page-title mb-3" th:text="${title}">Error</h1>
+        <p class="page-subtitle mb-4" th:text="${message}">Something went wrong.</p>
+        <a class="btn btn-primary" th:href="@{/dashboard}">Go back</a>
+    </div>
+</div>
+</body>
+</html>

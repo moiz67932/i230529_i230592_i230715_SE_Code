@@ -1,0 +1,46 @@
+<aside th:fragment="sidebar" class="sidebar-shell">
+    <div class="sidebar-brand">
+        <div class="brand-mark">PX</div>
+        <div>
+            <p class="brand-kicker mb-1">PipelineX</p>
+            <p class="brand-caption mb-0">B2B CRM command center</p>
+        </div>
+    </div>
+
+    <nav class="nav flex-column sidebar-nav" th:if="${currentUser}">
+        <th:block th:if="${currentUser.admin}">
+            <a class="nav-link" th:href="@{/dashboard}" th:classappend="${activeNav == 'dashboard'} ? 'active'">
+                <i class="bi bi-grid-1x2"></i><span>Dashboard</span>
+            </a>
+            <a class="nav-link" th:href="@{/users}" th:classappend="${activeNav == 'users'} ? 'active'">
+                <i class="bi bi-people"></i><span>Users</span>
+            </a>
+            <a class="nav-link" th:href="@{/leads}" th:classappend="${activeNav == 'leads'} ? 'active'">
+                <i class="bi bi-diagram-3"></i><span>Leads</span>
+            </a>
+            <a class="nav-link" th:href="@{/follow-ups}" th:classappend="${activeNav == 'followups'} ? 'active'">
+                <i class="bi bi-bell"></i><span>Follow-ups</span>
+            </a>
+            <a class="nav-link" th:href="@{/analytics}" th:classappend="${activeNav == 'analytics'} ? 'active'">
+                <i class="bi bi-bar-chart"></i><span>Analytics</span>
+            </a>
+        </th:block>
+        <th:block th:unless="${currentUser.admin}">
+            <a class="nav-link" th:href="@{/my-leads}" th:classappend="${activeNav == 'my-leads'} ? 'active'">
+                <i class="bi bi-kanban"></i><span>My Leads</span>
+            </a>
+            <a class="nav-link" th:href="@{/follow-ups}" th:classappend="${activeNav == 'followups'} ? 'active'">
+                <i class="bi bi-bell"></i><span>Follow-ups</span>
+            </a>
+        </th:block>
+        <a class="nav-link" th:href="@{/profile}" th:classappend="${activeNav == 'profile'} ? 'active'">
+            <i class="bi bi-person-circle"></i><span>Profile</span>
+        </a>
+    </nav>
+
+    <form th:action="@{/logout}" method="post" class="sidebar-logout">
+        <button class="btn btn-logout w-100" type="submit">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+    </form>
+</aside>

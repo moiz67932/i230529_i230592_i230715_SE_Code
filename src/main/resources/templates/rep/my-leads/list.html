@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/main :: head(${title})}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content-shell">
+        <section class="surface-panel">
+            <div th:replace="~{fragments/topbar :: topbar(${pageTitle}, ${pageSubtitle})}"></div>
+            <div class="table-shell" th:if="${!leads.isEmpty()}">
+                <table class="table align-middle">
+                    <thead>
+                    <tr>
+                        <th>Lead</th>
+                        <th>Company</th>
+                        <th>Stage</th>
+                        <th>Next follow-up</th>
+                        <th>Last activity</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="lead : ${leads}">
+                        <td>
+                            <div class="fw-semibold" th:text="${lead.leadName}"></div>
+                            <div class="text-muted small" th:text="${lead.email ?: lead.phone}"></div>
+                        </td>
+                        <td th:text="${lead.companyName}"></td>
+                        <td><span class="badge-soft" th:classappend="${' stage-' + #strings.toLowerCase(lead.currentStage.name())}" th:text="${lead.currentStage}"></span></td>
+                        <td>
+                            <span th:text="${lead.nextFollowUpDate != null ? dates.date(lead.nextFollowUpDate) : 'None scheduled'}"></span>
+                            <span class="badge-soft overdue-pill ms-2" th:if="${lead.overdue}">Overdue</span>
+                        </td>
+                        <td th:text="${lead.lastActivityAt != null ? dates.date(lead.lastActivityAt) : '—'}"></td>
+                        <td class="text-end"><a class="btn btn-surface" th:href="@{'/my-leads/' + ${lead.id}}">Open</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="empty-state" th:if="${leads.isEmpty()}">No leads are assigned to you yet. New assignments will appear here automatically.</div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

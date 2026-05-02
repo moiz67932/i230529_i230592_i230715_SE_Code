@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/main :: head(${title})}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content-shell">
+        <section class="surface-panel">
+            <div th:replace="~{fragments/topbar :: topbar(${pageTitle}, ${pageSubtitle})}"></div>
+            <div class="row g-3 mb-4">
+                <div class="col-lg-4">
+                    <div class="metric-card">
+                        <div class="metric-label">Assigned leads</div>
+                        <div class="display-metric" th:text="${metrics.assignedLeads()}"></div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="metric-card">
+                        <div class="metric-label">Overdue follow-ups</div>
+                        <div class="display-metric" th:text="${metrics.overdueFollowUps()}"></div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="metric-card">
+                        <div class="metric-label">Recent activities</div>
+                        <div class="display-metric" th:text="${metrics.recentActivities()}"></div>
+                    </div>
+                </div>
+            </div>
+            <section class="detail-card">
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">My stage mix</h2>
+                        <p class="section-caption">A quick read on your current active pipeline.</p>
+                    </div>
+                </div>
+                <div class="meta-list">
+                    <div class="meta-row" th:each="entry : ${metrics.stageDistribution()}">
+                        <span class="meta-label" th:text="${entry.key}"></span>
+                        <span class="meta-value" th:text="${entry.value}"></span>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+</div>
+</body>
+</html>

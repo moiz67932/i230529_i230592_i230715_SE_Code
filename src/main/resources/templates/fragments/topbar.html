@@ -1,0 +1,21 @@
+<header th:fragment="topbar(pageTitle, pageSubtitle)" class="topbar">
+    <div>
+        <p class="eyebrow mb-2">PipelineX workspace</p>
+        <h1 class="page-title mb-1" th:text="${pageTitle}">Dashboard</h1>
+        <p class="page-subtitle mb-0" th:text="${pageSubtitle}">Operational visibility for your pipeline.</p>
+    </div>
+    <div class="topbar-actions d-flex align-items-center gap-3">
+        <button class="btn btn-surface btn-icon d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarDrawer" aria-label="Open menu">
+            <i class="bi bi-list"></i>
+        </button>
+        <button class="btn btn-surface btn-icon" type="button" id="themeToggle" aria-label="Toggle theme">
+            <i class="bi bi-moon-stars"></i>
+        </button>
+        <div class="current-user" th:if="${currentUser}">
+            <div class="current-user__meta">
+                <span class="current-user__name" th:text="${currentUser.fullName}">User Name</span>
+                <span class="current-user__role" th:text="${currentUser.role}">ADMIN</span>
+            </div>
+        </div>
+    </div>
+</header>

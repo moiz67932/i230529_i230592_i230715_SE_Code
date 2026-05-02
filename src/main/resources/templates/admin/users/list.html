@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/main :: head(${title})}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content-shell">
+        <section class="surface-panel">
+            <div th:replace="~{fragments/topbar :: topbar(${pageTitle}, ${pageSubtitle})}"></div>
+            <div th:replace="~{fragments/flash :: flash}"></div>
+            <div class="detail-card mb-4">
+                <form class="row g-3 align-items-end" method="get" th:action="@{/users}">
+                    <div class="col-lg-5">
+                        <label class="form-label" for="q">Search reps</label>
+                        <input class="form-control" id="q" name="q" th:value="${query}" placeholder="Search by name or email">
+                    </div>
+                    <div class="col-lg-3">
+                        <label class="form-label" for="status">Status</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="">All statuses</option>
+                            <option value="ACTIVE" th:selected="${selectedStatus?.name() == 'ACTIVE'}">Active</option>
+                            <option value="INACTIVE" th:selected="${selectedStatus?.name() == 'INACTIVE'}">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2">
+                        <label class="form-label" for="sort">Sort by</label>
+                        <select class="form-select" id="sort" name="sort">
+                            <option value="name" th:selected="${sort == 'name'}">Name</option>
+                            <option value="created" th:selected="${sort == 'created'}">Created</option>
+                            <option value="workload" th:selected="${sort == 'workload'}">Workload</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2 d-grid">
+                        <button class="btn btn-primary" type="submit">Apply</button>
+                    </div>
+                </form>
+            </div>
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">Rep accounts</h2>
+                    <p class="section-caption">Securely manage onboarding, status, and workload visibility.</p>
+                </div>
+                <a class="btn btn-primary" th:href="@{/users/new}">Create rep</a>
+            </div>
+            <div class="table-shell">
+                <table class="table align-middle">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Assigned leads</th>
+                        <th>Created</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td>
+                            <div class="fw-semibold" th:text="${user.fullName}"></div>
+                            <div class="text-muted small" th:if="${user.mustChangePassword}">Must change password on next login</div>
+                        </td>
+                        <td th:text="${user.email}"></td>
+                        <td><span class="badge-soft" th:classappend="${user.status.name() == 'ACTIVE'} ? ' status-active' : ' status-inactive'" th:text="${user.status}"></span></td>
+                        <td th:text="${user.workload}"></td>
+                        <td th:text="${dates.date(user.createdAt)}"></td>
+                        <td class="text-end"><a class="btn btn-surface" th:href="@{'/users/' + ${user.id}}">View</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/main :: head(${title})}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content-shell">
+        <section class="surface-panel">
+            <div th:replace="~{fragments/topbar :: topbar(${pageTitle}, ${pageSubtitle})}"></div>
+            <div class="row g-3 mb-4">
+                <div class="col-lg-3">
+                    <div class="metric-card">
+                        <div class="metric-label">Overdue follow-ups</div>
+                        <div class="display-metric" th:text="${overdueCount}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-shell" th:if="${!items.isEmpty()}">
+                <table class="table align-middle">
+                    <thead>
+                    <tr>
+                        <th>Lead</th>
+                        <th>Company</th>
+                        <th>Assigned rep</th>
+                        <th>Due date</th>
+                        <th>Days overdue</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${items}">
+                        <td th:text="${item.leadName}"></td>
+                        <td th:text="${item.companyName}"></td>
+                        <td th:text="${item.assignedRepName}"></td>
+                        <td th:text="${dates.date(item.dueDate)}"></td>
+                        <td><span class="badge-soft overdue-pill" th:text="${item.daysOverdue + ' days'}"></span></td>
+                        <td class="text-end">
+                            <a class="btn btn-surface" th:href="${currentUser.admin ? '/leads/' + item.leadId : '/my-leads/' + item.leadId}">Open lead</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="empty-state" th:if="${items.isEmpty()}">No overdue follow-ups right now.</div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

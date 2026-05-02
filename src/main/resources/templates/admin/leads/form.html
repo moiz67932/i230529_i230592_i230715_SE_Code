@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/main :: head(${title})}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content-shell">
+        <section class="surface-panel">
+            <div th:replace="~{fragments/topbar :: topbar(${pageTitle}, ${pageSubtitle})}"></div>
+            <div class="detail-card" style="max-width: 920px;">
+                <form th:action="${leadId != null} ? @{'/leads/' + ${leadId}} : @{/leads}" th:object="${leadForm}" method="post" class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="leadName">Lead name</label>
+                        <input class="form-control" id="leadName" th:field="*{leadName}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="companyName">Company</label>
+                        <input class="form-control" id="companyName" th:field="*{companyName}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="phone">Phone</label>
+                        <input class="form-control" id="phone" th:field="*{phone}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="email">Email</label>
+                        <input class="form-control" id="email" th:field="*{email}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="leadSource">Lead source</label>
+                        <input class="form-control" id="leadSource" th:field="*{leadSource}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="assignedRepId">Assigned rep</label>
+                        <select class="form-select" id="assignedRepId" th:field="*{assignedRepId}">
+                            <option value="">Unassigned</option>
+                            <option th:each="rep : ${repOptions}" th:value="${rep.id()}" th:text="${rep.fullName()}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="companyWebsite">Website</label>
+                        <input class="form-control" id="companyWebsite" th:field="*{companyWebsite}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="jobTitle">Job title</label>
+                        <input class="form-control" id="jobTitle" th:field="*{jobTitle}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="linkedinUrl">LinkedIn URL</label>
+                        <input class="form-control" id="linkedinUrl" th:field="*{linkedinUrl}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="notes">Notes</label>
+                        <textarea class="form-control" id="notes" th:field="*{notes}" rows="4"></textarea>
+                    </div>
+                    <div class="col-12 d-flex gap-2">
+                        <button class="btn btn-primary" type="submit" th:text="${leadId != null} ? 'Save changes' : 'Create lead'"></button>
+                        <a class="btn btn-outline-secondary" th:href="@{/leads}">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

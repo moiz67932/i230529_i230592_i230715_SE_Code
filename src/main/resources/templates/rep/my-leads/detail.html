@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/main :: head(${title})}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content-shell">
+        <section class="surface-panel">
+            <div th:replace="~{fragments/topbar :: topbar(${pageTitle}, ${pageSubtitle})}"></div>
+            <div th:replace="~{fragments/flash :: flash}"></div>
+            <div th:replace="~{admin/leads/workspace :: workspace(${leadDetail}, ${'/my-leads/' + leadDetail.lead.id})}"></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

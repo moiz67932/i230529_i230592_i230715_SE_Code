@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/main :: head(${title})}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content-shell">
+        <section class="surface-panel">
+            <div th:replace="~{fragments/topbar :: topbar(${pageTitle}, ${pageSubtitle})}"></div>
+            <div th:replace="~{fragments/flash :: flash}"></div>
+            <div class="detail-card mb-4">
+                <form class="row g-3 align-items-end" method="get" th:action="@{/leads}">
+                    <div class="col-lg-4">
+                        <label class="form-label" for="q">Search</label>
+                        <input class="form-control" id="q" name="q" placeholder="Lead, company, phone, or email">
+                    </div>
+                    <div class="col-lg-2">
+                        <label class="form-label" for="stage">Stage</label>
+                        <select class="form-select" id="stage" name="stage">
+                            <option value="">All</option>
+                            <option th:each="stage : ${T(com.pipelinex.shared.domain.LeadStage).values()}" th:value="${stage}" th:text="${stage}"></option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2">
+                        <label class="form-label" for="assignedRepId">Rep</label>
+                        <select class="form-select" id="assignedRepId" name="assignedRepId">
+                            <option value="">All</option>
+                            <option th:each="rep : ${repOptions}" th:value="${rep.id()}" th:text="${rep.fullName()}"></option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2">
+                        <label class="form-label" for="assignmentState">Assignment</label>
+                        <select class="form-select" id="assignmentState" name="assignmentState">
+                            <option value="">Any</option>
+                            <option value="assigned">Assigned</option>
+                            <option value="unassigned">Unassigned</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2 d-grid">
+                        <button class="btn btn-primary" type="submit">Apply</button>
+                    </div>
+                </form>
+            </div>
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">Active leads</h2>
+                    <p class="section-caption">Search, filter, and open any lead workspace.</p>
+                </div>
+                <a class="btn btn-primary" th:href="@{/leads/new}">Create lead</a>
+            </div>
+            <div class="table-shell">
+                <table class="table align-middle">
+                    <thead>
+                    <tr>
+                        <th>Lead</th>
+                        <th>Company</th>
+                        <th>Assigned rep</th>
+                        <th>Stage</th>
+                        <th>Next follow-up</th>
+                        <th>Updated</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="lead : ${leads}">
+                        <td>
+                            <div class="fw-semibold" th:text="${lead.leadName}"></div>
+                            <div class="text-muted small" th:text="${lead.email ?: lead.phone}"></div>
+                        </td>
+                        <td th:text="${lead.companyName}"></td>
+                        <td th:text="${lead.assignedRepName}"></td>
+                        <td><span class="badge-soft" th:classappend="${' stage-' + #strings.toLowerCase(lead.currentStage.name())}" th:text="${lead.currentStage}"></span></td>
+                        <td>
+                            <span th:text="${lead.nextFollowUpDate != null ? dates.date(lead.nextFollowUpDate) : 'None scheduled'}"></span>
+                            <span class="badge-soft overdue-pill ms-2" th:if="${lead.overdue}">Overdue</span>
+                        </td>
+                        <td th:text="${dates.dateTime(lead.updatedAt)}"></td>
+                        <td class="text-end">
+                            <a class="btn btn-surface" th:href="@{'/leads/' + ${lead.id}}">Open</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/main :: head(${title})}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content-shell">
+        <section class="surface-panel">
+            <div th:replace="~{fragments/topbar :: topbar(${pageTitle}, ${pageSubtitle})}"></div>
+            <div class="detail-grid">
+                <section class="detail-card span-6">
+                    <h2 class="section-title mb-3">Stage distribution</h2>
+                    <div class="meta-list">
+                        <div class="meta-row" th:each="entry : ${metrics.stageDistribution()}">
+                            <span class="meta-label" th:text="${entry.key}"></span>
+                            <span class="meta-value" th:text="${entry.value}"></span>
+                        </div>
+                    </div>
+                </section>
+                <section class="detail-card span-6">
+                    <h2 class="section-title mb-3">Source breakdown</h2>
+                    <div class="meta-list">
+                        <div class="meta-row" th:each="entry : ${metrics.sourceBreakdown()}">
+                            <span class="meta-label" th:text="${entry.key}"></span>
+                            <span class="meta-value" th:text="${entry.value}"></span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

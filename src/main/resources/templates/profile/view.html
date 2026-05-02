@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/main :: head(${title})}"></head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content-shell">
+        <section class="surface-panel">
+            <div th:replace="~{fragments/topbar :: topbar(${pageTitle}, ${pageSubtitle})}"></div>
+            <div th:replace="~{fragments/flash :: flash}"></div>
+            <div class="detail-grid">
+                <section class="detail-card span-5">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Account details</h2>
+                            <p class="section-caption">Keep your name and login email current.</p>
+                        </div>
+                    </div>
+                    <form th:action="@{/profile}" th:object="${profileForm}" method="post" class="d-grid gap-3">
+                        <div>
+                            <label class="form-label" for="fullName">Full name</label>
+                            <input class="form-control" id="fullName" th:field="*{fullName}">
+                            <div class="text-danger small mt-1" th:errors="*{fullName}"></div>
+                        </div>
+                        <div>
+                            <label class="form-label" for="email">Email</label>
+                            <input class="form-control" id="email" th:field="*{email}">
+                            <div class="text-danger small mt-1" th:errors="*{email}"></div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Save profile</button>
+                    </form>
+                </section>
+                <section class="detail-card span-7">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Password & security</h2>
+                            <p class="section-caption">Use a strong password to protect your session access.</p>
+                        </div>
+                    </div>
+                    <form th:action="@{/profile/password}" th:object="${passwordForm}" method="post" class="d-grid gap-3">
+                        <div>
+                            <label class="form-label" for="currentPassword">Current password</label>
+                            <input class="form-control" id="currentPassword" type="password" th:field="*{currentPassword}">
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="newPassword">New password</label>
+                                <input class="form-control" id="newPassword" type="password" th:field="*{newPassword}">
+                                <div class="text-danger small mt-1" th:errors="*{newPassword}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="confirmPassword">Confirm new password</label>
+                                <input class="form-control" id="confirmPassword" type="password" th:field="*{confirmPassword}">
+                                <div class="text-danger small mt-1" th:errors="*{confirmPassword}"></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Change password</button>
+                    </form>
+                </section>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

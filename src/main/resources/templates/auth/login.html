@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/main :: head('PipelineX Login')}"></head>
+<body>
+<main class="login-shell">
+    <section class="login-card">
+        <div class="login-brand">
+            <div class="sidebar-brand">
+                <div class="brand-mark">PX</div>
+                <div>
+                    <p class="brand-kicker mb-1">PipelineX</p>
+                    <p class="brand-caption mb-0">CRM & Sales Pipeline Management</p>
+                </div>
+            </div>
+            <h1 class="page-title mt-5 mb-3 text-white">Run outreach like an operating system, not a spreadsheet.</h1>
+            <p class="fs-5 text-white-50">Secure lead ownership, disciplined follow-ups, stage visibility, and real accountability for every rep.</p>
+            <div class="login-highlight">
+                <div class="stat-chip">
+                    <strong class="d-block mb-1">Admin control</strong>
+                    <span class="text-white-50">Users, assignment, analytics, and lifecycle oversight in one place.</span>
+                </div>
+                <div class="stat-chip">
+                    <strong class="d-block mb-1">Rep execution</strong>
+                    <span class="text-white-50">A daily workspace for stage updates, activity logging, and follow-up recovery.</span>
+                </div>
+            </div>
+        </div>
+        <div class="login-panel">
+            <p class="eyebrow mb-2">Secure sign in</p>
+            <h2 class="page-title mb-3">PipelineX Login</h2>
+            <p class="page-subtitle mb-4">Use your work email and password to access the CRM.</p>
+
+            <div class="alert alert-danger" th:if="${param.error}">Invalid email or password.</div>
+            <div class="alert alert-success" th:if="${param.logout}">You have been logged out.</div>
+
+            <form th:action="@{/login}" method="post" class="d-grid gap-3">
+                <div>
+                    <label class="form-label" for="email">Email</label>
+                    <input class="form-control" id="email" name="email" type="email" autocomplete="username" required>
+                </div>
+                <div>
+                    <label class="form-label" for="password">Password</label>
+                    <input class="form-control" id="password" name="password" type="password" autocomplete="current-password" required>
+                </div>
+                <button class="btn btn-primary btn-lg" type="submit">Sign In</button>
+            </form>
+        </div>
+    </section>
+</main>
+</body>
+</html>
