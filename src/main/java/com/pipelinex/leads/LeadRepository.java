@@ -13,16 +13,16 @@ public interface LeadRepository extends JpaRepository<Lead, Long> {
 
     @Query("""
         select l from Lead l
-        where (:query is null or lower(l.leadName) like lower(concat('%', :query, '%'))
-             or lower(l.companyName) like lower(concat('%', :query, '%'))
-             or lower(coalesce(l.phone, '')) like lower(concat('%', :query, '%'))
-             or lower(coalesce(l.email, '')) like lower(concat('%', :query, '%')))
+        where (:query is null or lower(l.leadName) like :query
+             or lower(l.companyName) like :query
+             or lower(coalesce(l.phone, '')) like :query
+             or lower(coalesce(l.email, '')) like :query)
           and (:stage is null or l.currentStage = :stage)
           and (:assignedRepId is null or l.assignedToUserId = :assignedRepId)
           and (:assignmentState is null or (:assignmentState = 'assigned' and l.assignedToUserId is not null) or (:assignmentState = 'unassigned' and l.assignedToUserId is null))
           and (:followUpStatus is null or l.nextFollowUpStatus = :followUpStatus)
           and (:archived is null or l.archived = :archived)
-          and (:leadSource is null or lower(l.leadSource) = lower(:leadSource))
+          and (:leadSource is null or lower(l.leadSource) = :leadSource)
         """)
     List<Lead> searchAdmin(String query,
                            LeadStage stage,
@@ -36,10 +36,10 @@ public interface LeadRepository extends JpaRepository<Lead, Long> {
     @Query("""
         select l from Lead l
         where l.assignedToUserId = :repId
-          and (:query is null or lower(l.leadName) like lower(concat('%', :query, '%'))
-             or lower(l.companyName) like lower(concat('%', :query, '%'))
-             or lower(coalesce(l.phone, '')) like lower(concat('%', :query, '%'))
-             or lower(coalesce(l.email, '')) like lower(concat('%', :query, '%')))
+          and (:query is null or lower(l.leadName) like :query
+             or lower(l.companyName) like :query
+             or lower(coalesce(l.phone, '')) like :query
+             or lower(coalesce(l.email, '')) like :query)
           and (:stage is null or l.currentStage = :stage)
           and (:followUpStatus is null or l.nextFollowUpStatus = :followUpStatus)
           and (:overdueOnly = false or (l.nextFollowUpStatus = com.pipelinex.shared.domain.FollowUpStatus.PENDING and l.nextFollowUpDate < current_date))

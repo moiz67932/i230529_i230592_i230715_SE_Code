@@ -62,6 +62,11 @@ public class LeadService {
         this.currentUserAccessor = currentUserAccessor;
     }
 
+    private String toLikePattern(String query) {
+        String trimmed = NormalizationUtils.trimToNull(query);
+        return trimmed == null ? null : "%" + trimmed.toLowerCase() + "%";
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     public List<LeadListItemView> searchAdmin(String query,
                                               LeadStage stage,
@@ -70,8 +75,10 @@ public class LeadService {
                                               FollowUpStatus followUpStatus,
                                               Boolean archived,
                                               String leadSource) {
-        return leadRepository.searchAdmin(NormalizationUtils.trimToNull(query), stage, assignedRepId, assignmentState,
-                        followUpStatus, archived == null ? Boolean.FALSE : archived, NormalizationUtils.trimToNull(leadSource),
+        String ls = NormalizationUtils.trimToNull(leadSource);
+        ls = ls == null ? null : ls.toLowerCase();
+        return leadRepository.searchAdmin(toLikePattern(query), stage, assignedRepId, assignmentState,
+                        followUpStatus, archived == null ? Boolean.FALSE : archived, ls,
                         Sort.by(Sort.Order.desc("updatedAt")))
                 .stream()
                 .map(this::toListItem)
@@ -83,7 +90,7 @@ public class LeadService {
                                                 FollowUpStatus followUpStatus,
                                                 boolean overdueOnly) {
         User user = currentUserAccessor.requireUser();
-        return leadRepository.searchRep(user.getId(), NormalizationUtils.trimToNull(query), stage, followUpStatus, overdueOnly, Boolean.FALSE,
+        return leadRepository.searchRep(user.getId(), toLikePattern(query), stage, followUpStatus, overdueOnly, Boolean.FALSE,
                         Sort.by(Sort.Order.asc("nextFollowUpDate"), Sort.Order.desc("updatedAt")))
                 .stream()
                 .map(this::toListItem)

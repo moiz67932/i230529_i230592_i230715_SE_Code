@@ -1,9 +1,9 @@
 INSERT INTO users (id, full_name, email, password_hash, role, status, must_change_password, last_login_at, created_at, created_by, updated_at, updated_by)
 VALUES
-    (1, 'Amina Rahman', 'admin@pipelinex.local', '$2a$10$7EqJtq98hPqEX7fNZaFWoOHi2uB6FQ0VVIAtF5NCz7L+G2kZZgwyW', 'ADMIN', 'ACTIVE', FALSE, NULL, NOW(), NULL, NOW(), NULL),
-    (2, 'Noah Carter', 'rep.noah@pipelinex.local', '$2a$10$7EqJtq98hPqEX7fNZaFWoOHi2uB6FQ0VVIAtF5NCz7L+G2kZZgwyW', 'REP', 'ACTIVE', TRUE, NULL, NOW(), 1, NOW(), 1),
-    (3, 'Layla Chen', 'rep.layla@pipelinex.local', '$2a$10$7EqJtq98hPqEX7fNZaFWoOHi2uB6FQ0VVIAtF5NCz7L+G2kZZgwyW', 'REP', 'ACTIVE', TRUE, NULL, NOW(), 1, NOW(), 1),
-    (4, 'Omar Diaz', 'rep.inactive@pipelinex.local', '$2a$10$7EqJtq98hPqEX7fNZaFWoOHi2uB6FQ0VVIAtF5NCz7L+G2kZZgwyW', 'REP', 'INACTIVE', TRUE, NULL, NOW(), 1, NOW(), 1);
+    (1, 'Amina Rahman', 'admin@pipelinex.local', '$2a$12$XE7LKBkBq706NqUBnEoZL.6vnQzcP2BPf/TRqMaC0TY2.wlGIaS9O', 'ADMIN', 'ACTIVE', FALSE, NULL, NOW(), NULL, NOW(), NULL),
+    (2, 'Noah Carter', 'rep.noah@pipelinex.local', '$2a$12$XE7LKBkBq706NqUBnEoZL.6vnQzcP2BPf/TRqMaC0TY2.wlGIaS9O', 'REP', 'ACTIVE', TRUE, NULL, NOW(), 1, NOW(), 1),
+    (3, 'Layla Chen', 'rep.layla@pipelinex.local', '$2a$12$XE7LKBkBq706NqUBnEoZL.6vnQzcP2BPf/TRqMaC0TY2.wlGIaS9O', 'REP', 'ACTIVE', TRUE, NULL, NOW(), 1, NOW(), 1),
+    (4, 'Omar Diaz', 'rep.inactive@pipelinex.local', '$2a$12$XE7LKBkBq706NqUBnEoZL.6vnQzcP2BPf/TRqMaC0TY2.wlGIaS9O', 'REP', 'INACTIVE', TRUE, NULL, NOW(), 1, NOW(), 1);
 
 SELECT setval('users_id_seq', 4, true);
 

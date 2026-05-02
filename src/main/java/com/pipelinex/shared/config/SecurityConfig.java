@@ -57,11 +57,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PipelineXUserDetailsService delegate) {
-        return delegate;
-    }
-
-    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
